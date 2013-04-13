@@ -37,6 +37,7 @@ endfunction
 
 function! g:SyntasticChecker.getLocList()
     let list = self._locListFunc()
+    let list = self._filterOutErrorsFromOtherBufs(list)
     call self._populateHighlightRegexes(list)
     return g:SyntasticLoclist.New(list)
 endfunction
@@ -51,6 +52,10 @@ endfunction
 
 function! g:SyntasticChecker.isAvailable()
     return self._isAvailableFunc()
+endfunction
+
+function! g:SyntasticChecker._filterOutErrorsFromOtherBufs(list)
+    return filter(copy(a:list), 'v:val["bufnr"] == ' . bufnr(''))
 endfunction
 
 function! g:SyntasticChecker._populateHighlightRegexes(list)
